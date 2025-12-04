@@ -4,22 +4,54 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Sushi\Sushi;
 
 final class OptimizationWeight extends Model
 {
-    use HasFactory;
+    use Sushi;
 
-    protected $fillable = [
-        'name',
-        'display_name',
-        'price_weight',
-        'speed_weight',
-        'availability_weight',
-        'consolidation_weight',
-        'is_default',
-        'is_active',
+    protected array $rows = [
+        [
+            'id' => 1,
+            'name' => 'balanced',
+            'display_name' => 'Balanced',
+            'price_weight' => 0.50,
+            'speed_weight' => 0.30,
+            'availability_weight' => 0.15,
+            'consolidation_weight' => 0.05,
+            'is_default' => true,
+        ],
+        [
+            'id' => 2,
+            'name' => 'budget',
+            'display_name' => 'Maximum Savings',
+            'price_weight' => 0.70,
+            'speed_weight' => 0.15,
+            'availability_weight' => 0.10,
+            'consolidation_weight' => 0.05,
+            'is_default' => false,
+        ],
+        [
+            'id' => 3,
+            'name' => 'urgent',
+            'display_name' => 'Fastest Delivery',
+            'price_weight' => 0.20,
+            'speed_weight' => 0.60,
+            'availability_weight' => 0.15,
+            'consolidation_weight' => 0.05,
+            'is_default' => false,
+        ],
+        [
+            'id' => 4,
+            'name' => 'reliable',
+            'display_name' => 'Best Availability',
+            'price_weight' => 0.30,
+            'speed_weight' => 0.25,
+            'availability_weight' => 0.40,
+            'consolidation_weight' => 0.05,
+            'is_default' => false,
+        ],
     ];
 
     protected $casts = [
@@ -41,10 +73,23 @@ final class OptimizationWeight extends Model
         return $query->where('is_default', true);
     }
 
-    public function getTotalWeightAttribute(): float
+    public function scopeBalanced($query)
     {
-        return $this->price_weight + $this->speed_weight + $this->availability_weight + $this->consolidation_weight;
+        return $query->where('name', 'balanced');
+    }
+
+    public function scopeBudget($query)
+    {
+        return $query->where('name', 'budget');
+    }
+
+    public function scopeUrgent($query)
+    {
+        return $query->where('name', 'urgent');
+    }
+
+    public function scopeReliable($query)
+    {
+        return $query->where('name', 'reliable');
     }
 }
-
-
