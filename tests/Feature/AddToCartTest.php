@@ -312,3 +312,44 @@ it('fails when a user is trying to add an out of stock product', function () {
     assertDatabaseCount('carts', 1);
     assertDatabaseCount('cart_items', 0);
 });
+
+it('returns too many requests when a user is trying to add more than 40 items to cart in one minute', function () {
+    $newUser = new NewUser();
+    $newUser->withCart();
+    $product = new NewProduct()->product;
+    $distributor = new NewDistributor()->distributor;
+    $distributorProduct = new NewDistributorProduct([
+        'product_id' => $product->id,
+        'distributor_id' => $distributor->id,
+        'in_stock' => true,
+        'stock_quantity' => 1000,
+    ])->distributorProduct;
+
+    $this->actingAs($newUser->user);
+
+    for ($i = 0; $i < 40; $i++) {
+        $response = $this->postJson(
+            uri: '/api/v1/cart/items',
+            data: [
+                'distributor_product_id' => $distributorProduct->id,
+                'quantity' => 1,
+            ],
+            headers: [
+                'Authorization' => 'Bearer ' . $newUser->token,
+            ]
+        );
+        $response->assertCreated();
+    }
+
+    $response = $this->postJson(
+        uri: '/api/v1/cart/items',
+        data: [
+            'distributor_product_id' => $distributorProduct->id,
+            'quantity' => 1,
+        ],
+        headers: [
+            'Authorization' => 'Bearer ' . $newUser->token,
+        ]
+    );
+    $response->assertTooManyRequests();
+});
