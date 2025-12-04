@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('sku', 100)->unique();
+            $table->string('sku', 100)->unique(); // Acts as the glue between the same products from different distributor
             $table->timestamps();
         });
     }
