@@ -20,9 +20,6 @@ trait WithDistributorProduct
 
     public function createDistributorProduct(array $attributes = []): DistributorProduct
     {
-        $attributes['product_id'] = $this->product?->id ?? null;
-        $attributes['distributor_id'] = $this->distributor?->id ?? null;
-
         return DistributorProductFactory::new()->create($attributes);
     }
 }

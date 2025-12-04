@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Tests\Traits\WithDistributor;
+use Tests\Traits\WithProduct;
 
-final class NewDistributor
+final class NewProduct
 {
-    use WithDistributor;
+    use WithProduct;
 
     public function __construct(
         private readonly array $attributes = [],
     )
     {
-        $this->withDistributor($this->attributes);
+        $this->withProduct($this->attributes);
     }
 }
