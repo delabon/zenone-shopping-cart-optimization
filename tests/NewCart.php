@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use App\Models\User;
+use Illuminate\Testing\TestResponse;
 use Tests\Traits\WithCart;
 use Tests\Traits\WithDistributor;
 use Tests\Traits\WithDistributorProduct;
@@ -22,11 +23,11 @@ final class NewCart
     }
 
     public function addItem(
-        $test,
+        TestCase $test,
         int $distributorProductId,
         int $quantity,
         string $token
-    ) {
+    ): TestResponse {
         return $test->postJson(
             uri: '/api/v1/cart/items',
             data: [
