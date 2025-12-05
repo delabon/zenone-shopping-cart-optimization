@@ -6,10 +6,10 @@ A smart cart optimization system that helps dental practices make better purchas
 
 This implementation uses a **weighted scoring engine** that evaluates cart items across four optimization criteria:
 
-- **Price** (50%) - Find cost-effective alternatives
-- **Speed** (30%) - Prioritize faster delivery options  
-- **Availability** (15%) - Ensure products are in stock
-- **Consolidation** (5%) - Minimize number of distributors
+- **Price** - Find cost-effective alternatives
+- **Speed** - Prioritize faster delivery options  
+- **Availability** - Ensure products are in stock
+- **Consolidation** - Minimize number of distributors
 
 The system provides full traceability, explainable recommendations, and is designed to scale to 100k+ SKUs with intelligent caching and database optimization.
 
