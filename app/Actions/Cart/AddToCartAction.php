@@ -5,19 +5,23 @@ declare(strict_types=1);
 namespace App\Actions\Cart;
 
 use App\DTOs\AddToCartDTO;
-use App\Exceptions\ProductOutOfStockException;
 use App\Models\Cart;
 use App\Models\DistributorProduct;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 final class AddToCartAction
 {
+    /**
+     * @throws Throwable
+     */
     public function execute(Cart $cart, AddToCartDTO $dto): void
     {
         $distributorProduct = DistributorProduct::query()
             ->findOrFail($dto->distributorProductId);
 
-        throw_if(! $distributorProduct->in_stock, new ProductOutOfStockException());
+        // We allow adding out-of stock products to cart so we can optimize later for availability
+        // throw_if(! $distributorProduct->in_stock, new ProductOutOfStockException());
 
         DB::transaction(function () use ($cart, $dto, $distributorProduct) {
             $cartItem = $cart->items()->firstOrCreate(

@@ -34,7 +34,7 @@ final class AddToCartRequest extends FormRequest
             'quantity' => [
                 'required',
                 'int',
-                'min:1',
+                'min:0',
                 'max:'.PHP_INT_MAX - 10000,
             ],
         ];

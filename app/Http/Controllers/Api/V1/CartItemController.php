@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Actions\Cart\AddToCartAction;
 use App\Http\Requests\AddToCartRequest;
 use App\Http\Resources\CartResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Throwable;
 
 final class CartItemController
 {
@@ -21,7 +21,7 @@ final class CartItemController
             $action->execute($cart, $request->toDto());
 
             return new JsonResponse(new CartResource($cart->refresh()), Response::HTTP_CREATED);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return new Response($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
