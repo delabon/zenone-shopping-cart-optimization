@@ -6,10 +6,10 @@ namespace App\Enums;
 
 enum OptimizationReasonCode: string
 {
-    case PriceSavings = 'PRICE_SAVINGS';
-    case FasterDelivery = 'FASTER_DELIVERY';
-    case InStock = 'IN_STOCK';
-    case Consolidation = 'CONSOLIDATION';
+    case PriceSavings = 'price_savings';
+    case FasterDelivery = 'faster_delivery';
+    case InStock = 'in_stock';
+    case Consolidation = 'consolidation';
 
     public function label(): string
     {

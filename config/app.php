@@ -125,4 +125,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'cart_optimization_algorithm' => 'quickwins_v1',
 ];

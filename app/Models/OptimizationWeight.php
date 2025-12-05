@@ -44,11 +44,11 @@ final class OptimizationWeight extends Model
         ],
         [
             'id' => 4,
-            'name' => 'reliable',
+            'name' => 'available',
             'display_name' => 'Best Availability',
             'price_weight' => 0.30,
             'speed_weight' => 0.25,
-            'availability_weight' => 0.40,
+            'availability_weight' => 0.70,
             'consolidation_weight' => 0.05,
             'is_default' => false,
         ],
@@ -88,8 +88,8 @@ final class OptimizationWeight extends Model
         return $query->where('name', 'urgent');
     }
 
-    public function scopeReliable($query)
+    public function scopeAvailable($query)
     {
-        return $query->where('name', 'reliable');
+        return $query->where('name', 'available');
     }
 }
