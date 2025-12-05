@@ -13,6 +13,7 @@ use App\Models\OptimizationSession;
 use App\Models\OptimizationWeight;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -93,15 +94,42 @@ final class OptimizeCartAction
     {
         $itemAlternatives = [];
 
-        // To prevent N+1 problem here we get all product ids in one query
-        $productIds = $items->pluck('distributorProduct')->pluck('product_id')->unique()->all();
+        // Get all distributor product IDs from cart items
+        $distributorProductIds = $items->pluck('distributor_product_id')
+            ->unique()
+            ->values()
+            ->sort() // Sort for consistent cache keys
+            ->all();
 
-        $distributorProducts = DistributorProduct::query()
-            ->whereIn('product_id', $productIds)
-            ->where('in_stock', true)
-            ->where('stock_quantity', '>', 0)
-            ->with('distributor')
-            ->get();
+        // Get all product IDs for querying alternatives
+        $productIds = $items->pluck('distributorProduct')
+            ->pluck('product_id')
+            ->unique()
+            ->values()
+            ->all();
+
+        // Cache key based on distributor product IDs (represents exact cart state)
+        $cacheKey = 'cart_alternatives:' . md5(implode(',', $distributorProductIds));
+
+        // Use cache tags for better invalidation (works with Redis, Memcached)
+        // Tag with both cart_alternatives and individual distributor product IDs
+        $tags = array_merge(
+            [
+                'cart_alternatives',
+            ],
+            array_map(static fn ($id) => "distributor_product_{$id}", $distributorProductIds)
+        );
+
+        $distributorProducts = Cache::tags($tags)->remember(
+            $cacheKey,
+            now()->addMinutes(15),
+            static fn () => DistributorProduct::query()
+                ->whereIn('product_id', $productIds)
+                ->where('in_stock', true)
+                ->where('stock_quantity', '>', 0)
+                ->with('distributor')
+                ->get()
+        );
 
         foreach ($items as $item) {
             /** @var CartItem $item */

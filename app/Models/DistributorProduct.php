@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use BadMethodCallException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 
 final class DistributorProduct extends Model
 {
@@ -28,6 +30,28 @@ final class DistributorProduct extends Model
         'in_stock' => 'boolean',
         'last_synced_at' => 'datetime',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        // Invalidate cache when distributor product is updated or deleted
+        self::saved(function (DistributorProduct $distributorProduct) {
+            self::clearAlternativesCache($distributorProduct->id);
+        });
+
+        self::deleted(function (DistributorProduct $distributorProduct) {
+            self::clearAlternativesCache($distributorProduct->id);
+        });
+    }
+
+    private static function clearAlternativesCache(int $id): void
+    {
+        Cache::tags([
+            'cart_alternatives',
+            "distributor_product_{$id}",
+        ])->flush();
+    }
 
     public function product(): BelongsTo
     {
