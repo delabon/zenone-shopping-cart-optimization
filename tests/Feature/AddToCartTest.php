@@ -309,6 +309,7 @@ test('a user can add an out of stock product to cart successfully', function () 
 
     assertDatabaseCount('carts', 1);
     assertDatabaseCount('cart_items', 1);
+    expect($cart->items->first()->quantity)->toBe(1);
 });
 
 it('returns too many requests when a user is trying to add more than 40 items to cart in one minute', function () {

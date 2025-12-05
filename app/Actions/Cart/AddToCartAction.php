@@ -21,7 +21,7 @@ final class AddToCartAction
             ->findOrFail($dto->distributorProductId);
 
         // We allow adding out-of stock products to cart so we can optimize later for availability
-        // throw_if(! $distributorProduct->in_stock, new ProductOutOfStockException());
+        // We don't allow checking out with out-of stock products
 
         DB::transaction(function () use ($cart, $dto, $distributorProduct) {
             $cartItem = $cart->items()->firstOrCreate(
@@ -35,10 +35,16 @@ final class AddToCartAction
                 ]
             );
 
-            $cartItem->update([
-                'quantity' => ($cartItem->quantity + $dto->quantity) >= $distributorProduct->stock_quantity
+            if ($distributorProduct->stock_quantity === 0) {
+                $quantity = 1;
+            } else {
+                $quantity = ($cartItem->quantity + $dto->quantity) >= $distributorProduct->stock_quantity
                     ? $distributorProduct->stock_quantity
-                    : $cartItem->quantity + $dto->quantity
+                    : $cartItem->quantity + $dto->quantity;
+            }
+
+            $cartItem->update([
+                'quantity' => $quantity,
             ]);
         });
     }

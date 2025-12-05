@@ -37,6 +37,6 @@ final class NewCart
             headers: [
                 'Authorization' => 'Bearer ' . $token,
             ]
-        );
+        )->assertCreated();
     }
 }
