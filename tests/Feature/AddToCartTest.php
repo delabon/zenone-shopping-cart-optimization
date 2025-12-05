@@ -280,7 +280,7 @@ it('fails with invalid distributor_product_id data', function (mixed $invalidId,
     assertDatabaseCount('cart_items', 0);
 })->with('invalid_distributor_product_id');
 
-it('fails when a user is trying to add an out of stock product', function () {
+test('a user can add an out of stock product to cart successfully', function () {
     $newUser = new NewUser();
     $cart = $newUser->withCart();
     $product = new NewProduct()->product;
@@ -305,11 +305,10 @@ it('fails when a user is trying to add an out of stock product', function () {
         ]
     );
 
-    $response->assertUnprocessable();
-    expect($response->getContent())->toBe('Product out of stock.');
+    $response->assertCreated();
 
     assertDatabaseCount('carts', 1);
-    assertDatabaseCount('cart_items', 0);
+    assertDatabaseCount('cart_items', 1);
 });
 
 it('returns too many requests when a user is trying to add more than 40 items to cart in one minute', function () {
