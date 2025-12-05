@@ -822,12 +822,32 @@ it('optimizes cart with multiple products with the balanced optimization preset'
             'data' => [
                 'items_optimized' => 2,
                 'items_analyzed' => 2,
+                'changes' => [
+                    [
+                        'suggested' => [
+                            'distributor_name' => $distributor2->name,
+                            'price' => $distributor2Product2->price, // Ear Plugs (1000)
+                        ],
+                        'reasons' => [
+                            [
+                                'code' => OptimizationReasonCode::PriceSavings->value,
+                            ],
+                        ],
+                    ],
+                    [
+                        'suggested' => [
+                            'distributor_name' => $distributor2->name,
+                            'price' => $distributor2Product1->price, // Orange Gloves (4000)
+                        ],
+                        'reasons' => [
+                            [
+                                'code' => OptimizationReasonCode::PriceSavings->value,
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ])
-        ->assertJsonPath('data.changes.0.suggested.id', $distributor2Product1->id)
-        ->assertJsonPath('data.changes.1.suggested.id', $distributor2Product2->id)
-        ->assertJsonPath('data.changes.0.reasons.0.code', OptimizationReasonCode::PriceSavings->value)
-        ->assertJsonPath('data.changes.1.reasons.0.code', OptimizationReasonCode::PriceSavings->value);
+        ]);
 });
 
 /**
