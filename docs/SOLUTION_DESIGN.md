@@ -678,11 +678,8 @@ SANCTUM_STATEFUL_DOMAINS=localhost:3000
 ### Phase 2: Advanced Optimizer
 - Tier 2 algorithm for complex carts (>50 items)
 - Cross-distributor bundle optimization
-- Shipping tier consolidation
-- Quantity discount optimization
 
 ### Phase 3: ML Integration
 - Train models on optimization acceptance data
 - Personalized weight recommendations per user
 - Predictive suggestions based on order history
-- Anomaly detection for pricing errors
