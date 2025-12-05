@@ -17,8 +17,6 @@ final class CartItemController
     {
         $cart = $request->user()->currentCart;
 
-        abort_if(! $cart, Response::HTTP_NOT_FOUND, 'Cart not found.');
-
         try {
             $action->execute($cart, $request->toDto());
 

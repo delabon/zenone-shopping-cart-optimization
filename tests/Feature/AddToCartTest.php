@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 use App\Models\CartItem;
 use App\Models\DistributorProduct;
-use Database\Factories\UserFactory;
-use Tests\NewCart;
+use \Illuminate\Http\Response;
 use Tests\NewDistributor;
 use Tests\NewDistributorProduct;
 use Tests\NewProduct;
@@ -233,7 +232,7 @@ it('fails when a user has no cart', function () {
         ]
     );
 
-    $response->assertNotFound();
+    $response->assertStatus(Response::HTTP_FORBIDDEN);
 
     assertDatabaseCount('carts', 0);
     assertDatabaseCount('cart_items', 0);
