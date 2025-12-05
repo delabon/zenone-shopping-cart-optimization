@@ -1,5 +1,3 @@
-## Development Notes
-
 After researching optimization approaches, I chose a hybrid solution using a Rules and Weights engine. It's explainable, fast, and tunable - perfect for the MVP while collecting data for future ML approaches.
 
 For devs, I recommend checking the feature tests and the action classes to understand more.
