@@ -54,3 +54,6 @@ vendor/bin/sail artisan db:seed
 ```shell
 vendor/bin/sail test
 ```
+
+### Thank You
+Thank you for taking the time to review my code, I hope to answer any questions you may have about my experience if given the chance to do so.
